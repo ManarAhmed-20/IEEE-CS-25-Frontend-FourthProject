@@ -1,35 +1,93 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import Nav from "./components/Nav";
+import Footer from "./components/Footer";
+import Register from "./components/Register";
+import Login from "./components/Login";
+import Shop from "./components/Shop";
+import Cart from "./components/Cart";
+import WishList from "./components/WishList";
+import NotFound from "./components/NotFound";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useState } from "react";
+import type { ProductProps } from "./components/Product";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [cartItems, setCartItems] = useState<ProductProps[]>([]);
+  const [wishListItems, setWishListItems] = useState<ProductProps[]>([]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  const addToCart = (product: ProductProps) => {
+    setCartItems((prev) => [...prev, product]);
+  };
+
+  const addToWishList = (product: ProductProps) => {
+    setWishListItems((prev) => [...prev, product]);
+  };
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <>
+          <Nav />
+          <Shop addToCart={addToCart} addToWishList={addToWishList} />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "/cart",
+      element: (
+        <>
+          <Nav />
+          <Cart cartItems={cartItems} />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "/wishlist",
+      element: (
+        <>
+          <Nav />
+          <WishList wishListItems={wishListItems} />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "/login",
+      element: (
+        <>
+          <Nav />
+          <Login />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "/register",
+      element: (
+        <>
+          <Nav />
+          <Register />
+          <Footer />
+        </>
+      ),
+    },
+    {
+      path: "*",
+      element: (
+        <>
+          <Nav />
+          <NotFound />
+          <Footer />
+        </>
+      ),
+    },
+  ]);
+
+
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
